@@ -24,12 +24,21 @@ public class HttpAccountRepository implements AccountRepository{
     public static final String URL_UUID_TO_PROFILE = "https://sessionserver.mojang.com/session/minecraft/profile/%s";
     public static final String URL_UUID_TO_HISTORY = "https://api.mojang.com/user/profiles/%s/names";
     
-    public static final Gson GSON = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
-
+    public static final Gson GSON;
+    
+    static{
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(NameRecordListResponse.class, NameRecordListResponse.DESERIALIZER);
+        builder.setPrettyPrinting();
+        builder.serializeNulls();
+        GSON = builder.create();
+    }
+    
     public HttpAccountRepository(){}
 
     @Override
     public MinecraftAccount getAccountByName(String name, Proxy proxy) throws AccountRepositoryException{
+        new GsonBuilder();
         if(proxy == null){
             throw new NullPointerException("The parameter proxy cannot be null! Use Proxy.NO_PROXY constant instead.");
         }
@@ -95,7 +104,7 @@ public class HttpAccountRepository implements AccountRepository{
         try{
             HttpURLConnection connection = (HttpURLConnection)new URL(String.format(URL_UUID_TO_HISTORY, uuid)).openConnection(proxy);
             
-            ListResponse<NameRecord> response = GSON.fromJson(Utilities.performGET(connection), ListResponse.class);
+            NameRecordListResponse response = GSON.fromJson(Utilities.performGET(connection), NameRecordListResponse.class);
             
             response.throwExceptionIfNeeded();
             
