@@ -38,7 +38,6 @@ public class HttpAccountRepository implements AccountRepository{
 
     @Override
     public MinecraftAccount getAccountByName(String name, Proxy proxy) throws AccountRepositoryException{
-        new GsonBuilder();
         if(proxy == null){
             throw new NullPointerException("The parameter proxy cannot be null! Use Proxy.NO_PROXY constant instead.");
         }
@@ -50,13 +49,11 @@ public class HttpAccountRepository implements AccountRepository{
         try{
             HttpURLConnection connection = (HttpURLConnection)new URL(String.format(URL_NAME_TO_UUID, name)).openConnection(proxy);
             
-            String json = Utilities.performGET(connection);
+            UuidResponse response = GSON.fromJson(Utilities.performGET(connection), UuidResponse.class);
             
-            if(json.isEmpty()){
+            if(response == null){
                 return null;
             }
-            
-            UuidResponse response = GSON.fromJson(json, UuidResponse.class);
             
             response.throwExceptionIfNeeded();
             
@@ -82,6 +79,10 @@ public class HttpAccountRepository implements AccountRepository{
             
             MinecraftAccountResponse response = GSON.fromJson(Utilities.performGET(connection), MinecraftAccountResponse.class);
             
+            if(response == null){
+                return null;
+            }
+            
             response.throwExceptionIfNeeded();
             
             return response.toAccount();
@@ -105,6 +106,10 @@ public class HttpAccountRepository implements AccountRepository{
             HttpURLConnection connection = (HttpURLConnection)new URL(String.format(URL_UUID_TO_HISTORY, uuid)).openConnection(proxy);
             
             NameRecordListResponse response = GSON.fromJson(Utilities.performGET(connection), NameRecordListResponse.class);
+            
+            if(response == null){
+                return null;
+            }
             
             response.throwExceptionIfNeeded();
             
