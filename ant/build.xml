@@ -1,0 +1,70 @@
+<!--
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  -->
+
+<project name="Minecraft-JavaAPI" basedir="..">
+    <description>
+        Generates the dist folder in order to be used in Maven.
+    </description>
+
+    <property name="dist" location="target/dist"/>
+    <property name="src" location="src/main/java"/>
+    <property name="javadoc" location="${dist}/javadoc"/>
+    <property name="classes" location="target/classes"/>
+    <property name="pom" location="pom.xml"/>
+    <xmlproperty id="project" file="${pom}"/>
+    <property name="base.file.name" value="${project.artifactId}-${project.version}"/>
+    <property name="javadoc.jar" value="${dist}/${base.file.name}-javadoc.jar"/>
+    <property name="sources.jar" value="${dist}/${base.file.name}-sources.jar"/>
+    <property name="project.jar" value="${dist}/${base.file.name}.jar"/>
+    <property name="zip" value="${dist}/${base.file.name}.zip"/>
+    <input addproperty="passphrase" message="Please provide your GPG passphrase:"/>
+
+    <target name="build">
+        <delete dir="${dist}" failonerror="false"/>
+
+        <mkdir dir="${dist}"/>
+
+        <javadoc sourcepath="${src}" destdir="${javadoc}">
+            <header>
+                <![CDATA[
+                <h1>SpongeData ${project.version} Documentation</h1>
+                ]]>
+            </header>
+        </javadoc>
+
+        <jar destfile="${javadoc.jar}">
+            <fileset dir="${javadoc}"/>
+        </jar>
+
+        <jar destfile="${sources.jar}">
+            <fileset dir="${src}"/>
+        </jar>
+
+        <jar destfile="${project.jar}">
+            <fileset dir="${classes}"/>
+        </jar>
+
+        <copy file="${pom}" todir="${dist}"/>
+
+        <delete dir="${javadoc}"/>
+
+        <apply executable="gpg" dir="${dist}" relative="true">
+            <arg value="--passphrase"/>
+            <arg value="${passphrase}"/>
+            <arg value="-s"/>
+            <fileset dir="${dist}"/>
+        </apply>
+
+        <move todir="${dist}" includeemptydirs="false">
+            <fileset dir="${dist}"/>
+            <mapper type="glob" from="*.gpg" to="*.asc"/>
+        </move>
+
+        <zip destfile="${zip}" basedir="${dist}" includes="*.jar"/>
+
+        <checksum file="${zip}" todir="${dist}" algorithm="SHA-256"/>
+    </target>
+</project>
