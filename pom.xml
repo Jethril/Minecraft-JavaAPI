@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  -->
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <name>Minecraft JavaAPI</name>
+    <groupId>com.github.eclipseonfire</groupId>
+    <artifactId>minecraft-javaapi</artifactId>
+    <version>1.0</version>
+    <packaging>jar</packaging>
+
+    <developers>
+        <developer>
+            <name>Arthur MILLE</name>
+            <email>arthurmille340@gmail.com</email>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>Mozilla Public Licence</name>
+            <url>https://www.mozilla.org/en-US/MPL/2.0/</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <build>
+        <plugins>
+            <!-- The Java compiler versions -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.6.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <scm>
+        <connection>scm:git:git://github.com/EclipseOnFire/Minecraft-JavaAPI.git</connection>
+        <developerConnection>scm:git:ssh://github.com:EclipseOnFire/Minecraft-JavaAPI.git</developerConnection>
+        <url>http://github.com/EclipseOnFire/Minecraft-JavaAPI</url>
+    </scm>
+
+    <dependencies>
+        <!-- Google Gson -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.3.1</version>
+        </dependency>
+
+        <!-- Apache Commons Codec -->
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.10</version>
+        </dependency>
+    </dependencies>
+</project>
